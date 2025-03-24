@@ -146,7 +146,7 @@ class TestProcessRebootCause(TestCase):
     }[os.path.basename(path)])
     @patch("os.remove")
     @patch("process_reboot_cause.swsscommon.SonicV2Connector")
-    @patch("process_reboot_cause.device_info.is_smartswitch", return_value=False)
+    @patch("process_reboot_cause.device_info.is_smartswitch", return_value=True)
     @patch("sys.stdout", new_callable=StringIO)
     @patch("os.geteuid", return_value=0)
     @patch("process_reboot_cause.device_info.get_dpu_list", return_value=["dpu1"])
