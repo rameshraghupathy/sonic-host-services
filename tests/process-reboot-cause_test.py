@@ -169,3 +169,6 @@ class TestProcessRebootCause(TestCase):
         # Simulate running the script
         with patch.object(sys, "argv", ["process-reboot-cause"]):
             process_reboot_cause.read_reboot_cause_files_and_save_to_db('dpu1')
+        
+        # Ensure the correct number of old history files are removed
+        mock_remove.assert_any_call("/host/reboot-cause/module/dpu1/history/file1.json")
