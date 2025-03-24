@@ -134,7 +134,7 @@ class TestProcessRebootCause(TestCase):
         with patch.object(sys, "argv", ["process-reboot-cause"]):
             process_reboot_cause.read_reboot_cause_files_and_save_to_db('dpu1')
 
-    @patch("builtins.open", new_callable=mock_open, read_data='{"cause": "Non-Hardware", "user": "", "comment": "Switch rebooted DPU", "device": "DPU0", "time": "Fri Dec 13 01:12:36 AM UTC 2024", "gen_time": "2024_12_13_01_12_36"}')
+    @patch("builtins.open", new_callable=mock_open, read_data='{"cause": "Non-Hardware", "user": "admin", "comment": "Switch rebooted DPU", "device": "DPU0", "time": "Fri Dec 13 01:12:36 AM UTC 2024", "gen_time": "2024_12_13_01_12_36"}')
     @patch("os.listdir", return_value=["file1.json", "file2.json", "file3.json", "file4.json", "prev_reboot_time.txt"])
     @patch("os.path.isfile", side_effect=lambda path: not path.endswith("prev_reboot_time.txt"))
     @patch("os.path.exists", return_value=True)
