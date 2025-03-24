@@ -131,7 +131,7 @@ class TestProcessRebootCause(TestCase):
             process_reboot_cause.read_reboot_cause_files_and_save_to_db('dpu1')
 
     # test_process_reboot_cause_with_old_files
-    @patch("builtins.open", new_callable=mock_open, read_data='{"cause": "Non-Hardware", "user": "admin", "comment": "Switch rebooted DPU", "device": "DPU0", "time": "Fri Dec 13 01:12:36 AM UTC 2024", "gen_time": "2024_12_13_01_12_36"}')
+    @patch("builtins.open", new_callable=mock_open, read_data='{"cause": "Non-Hardware", "user": "admin", "name": "2024_12_13_01_12_36", "comment": "Switch rebooted DPU", "device": "DPU0", "time": "Fri Dec 13 01:12:36 AM UTC 2024"}')
     @patch("os.listdir", return_value=["file1.json", "file2.json", "file3.json", "file4.json", "prev_reboot_time.txt"])
     @patch("os.path.isfile", side_effect=lambda path: not path.endswith("prev_reboot_time.txt"))
     @patch("os.path.exists", return_value=True)
@@ -147,28 +147,28 @@ class TestProcessRebootCause(TestCase):
     @patch("sys.stdout", new_callable=StringIO)
     @patch("os.geteuid", return_value=0)
     @patch("process_reboot_cause.device_info.get_dpu_list", return_value=["dpu0"])
-    def test_process_reboot_cause_with_old_files(self, mock_get_dpu_list, mock_geteuid, mock_stdout, mock_is_smartswitch,
-                                                mock_connector, mock_remove, mock_getmtime, mock_exists, mock_isfile,
-                                                mock_listdir, mock_open):
+    @patch("process_reboot_cause.sorted")  # Patch sorting
+    def test_process_reboot_cause_with_old_files(self, mock_sorted, mock_get_dpu_list, mock_geteuid,
+                                                mock_stdout, mock_is_smartswitch, mock_connector, mock_remove,
+                                                mock_getmtime, mock_exists, mock_isfile, mock_listdir, mock_open):
         global MAX_HISTORY_FILES
-        MAX_HISTORY_FILES = 2
+        MAX_HISTORY_FILES = 2  # Ensure we trigger the deletion logic
 
         # Mock DB
         mock_db = MagicMock()
         mock_connector.return_value = mock_db
 
-        # Patch TIME_SORTED_FULL_REBOOT_FILE_LIST *inside* the function
-        with patch("process_reboot_cause.read_reboot_cause_files_and_save_to_db", wraps=process_reboot_cause.read_reboot_cause_files_and_save_to_db) as mock_func:
-            mock_func.side_effect = lambda *args, **kwargs: [
-                "/host/reboot-cause/module/dpu0/history/file1.json",
-                "/host/reboot-cause/module/dpu0/history/file2.json",
-                "/host/reboot-cause/module/dpu0/history/file3.json",
-                "/host/reboot-cause/module/dpu0/history/file4.json"
-            ]
+        # Mock `sorted()` to force a specific file order in `TIME_SORTED_FULL_REBOOT_FILE_LIST`
+        mock_sorted.return_value = [
+            "/host/reboot-cause/module/dpu0/history/file1.json",
+            "/host/reboot-cause/module/dpu0/history/file2.json",
+            "/host/reboot-cause/module/dpu0/history/file3.json",
+            "/host/reboot-cause/module/dpu0/history/file4.json"
+        ]
 
-            # Simulate running the script
-            with patch.object(sys, "argv", ["process-reboot-cause"]):
-                process_reboot_cause.main()
+        # Simulate running the script
+        with patch.object(sys, "argv", ["process-reboot-cause"]):
+            process_reboot_cause.main()
 
         # Validate syslog and stdout logging
         output = mock_stdout.getvalue()
