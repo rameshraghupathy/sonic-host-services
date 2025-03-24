@@ -83,8 +83,6 @@ def read_reboot_cause_files_and_save_to_db(device='npu'):
                     continue  # Skip corrupted or non-JSON files
 
     # Remove old history files
-    print(f"Debug Test: TIME_SORTED_FULL_REBOOT_FILE_LIST:{TIME_SORTED_FULL_REBOOT_FILE_LIST}  MAX_HISTORY_FILES:{MAX_HISTORY_FILES}")
-    sonic_logger.log_warning(f"Debug Test: TIME_SORTED_FULL_REBOOT_FILE_LIST:{TIME_SORTED_FULL_REBOOT_FILE_LIST}  MAX_HISTORY_FILES:{MAX_HISTORY_FILES}")
     if len(TIME_SORTED_FULL_REBOOT_FILE_LIST) > MAX_HISTORY_FILES:
         for i in range(MAX_HISTORY_FILES, len(TIME_SORTED_FULL_REBOOT_FILE_LIST)):
             x = TIME_SORTED_FULL_REBOOT_FILE_LIST[i]
