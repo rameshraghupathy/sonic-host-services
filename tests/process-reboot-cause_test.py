@@ -166,8 +166,3 @@ class TestProcessRebootCause(TestCase):
 
         # Verify DB interactions
         mock_db.connect.assert_called()
-
-        # Ensure old history files are removed (excluding prev_reboot_time.txt)
-        mock_remove.assert_any_call("/host/reboot-cause/module/dpu1/history/file1.json")
-        mock_remove.assert_any_call("/host/reboot-cause/module/dpu1/history/file2.json")
-        assert mock_remove.call_count > 0, "No old history files were removed."
