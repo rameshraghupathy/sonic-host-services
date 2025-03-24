@@ -148,7 +148,7 @@ class TestProcessRebootCause(TestCase):
     @patch("process_reboot_cause.swsscommon.SonicV2Connector")
     @patch("process_reboot_cause.device_info.is_smartswitch", return_value=True)
     @patch("sys.stdout", new_callable=StringIO)
-    @patch("os.geteuid", return_value=1)
+    @patch("os.geteuid", return_value=0)
     @patch("process_reboot_cause.device_info.get_dpu_list", return_value=["dpu0"])
     def test_process_reboot_cause_with_old_files(self, mock_get_dpu_list, mock_geteuid, mock_stdout, mock_is_smartswitch,
                                                 mock_connector, mock_remove, mock_getmtime, mock_exists, mock_isfile,
