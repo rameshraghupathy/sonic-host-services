@@ -164,8 +164,6 @@ class TestProcessRebootCause(TestCase):
 
         mock_sorted.side_effect = sorted_side_effect
 
-        print(f"DEBUG: MAX_HISTORY_FILES = {MAX_HISTORY_FILES}")  # Print MAX_HISTORY_FILES
-
         # Simulate running the script
         with patch.object(sys, "argv", ["process-reboot-cause"]):
             process_reboot_cause.read_reboot_cause_files_and_save_to_db('dpu1')
