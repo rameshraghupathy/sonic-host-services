@@ -24,11 +24,6 @@ process_reboot_cause = load_module_from_source('process_reboot_cause', process_r
 
 # Now proceed with your test class and mocks
 class TestProcessRebootCause(TestCase):
-    def setUp(self):
-        global MAX_HISTORY_FILES, TIME_SORTED_FULL_REBOOT_FILE_LIST
-        MAX_HISTORY_FILES = 2
-        TIME_SORTED_FULL_REBOOT_FILE_LIST = ["file1.json", "file2.json", "file3.json", "file4.json"]
-
     @patch("builtins.open", new_callable=mock_open, read_data='{"cause": "Non-Hardware", "user": "", "comment": "Switch rebooted DPU", "device": "DPU0", "time": "Fri Dec 13 01:12:36 AM UTC 2024", "gen_time": "2024_12_13_01_12_36"}')
     @patch("os.listdir", return_value=["file1.json", "file2.json"])
     @patch("os.path.isfile", return_value=True)
