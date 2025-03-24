@@ -106,7 +106,7 @@ class TestProcessRebootCause(TestCase):
             process_reboot_cause.read_reboot_cause_files_and_save_to_db('dpu1')
 
     # Test read_reboot_cause_files_and_save_to_db - smartswitch - name not in data
-    @patch("builtins.open", new_callable=mock_open, read_data='{"cause": "Non-Hardware", "user": "admin", "comment": "Switch rebooted DPU", "device": "DPU0", "time": "Fri Dec 13 01:12:36 AM UTC 2024"}')
+    @patch("builtins.open", new_callable=mock_open, read_data='{"cause": "Non-Hardware", "user": "admin", "name": "2024_12_13_01_12_36", "comment": "Switch rebooted DPU", "device": "DPU0", "time": "Fri Dec 13 01:12:36 AM UTC 2024"}')
     @patch("os.listdir", return_value=["file1.json"])
     @patch("os.path.isfile", return_value=True)
     @patch("os.path.exists", return_value=True)
